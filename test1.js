@@ -2,9 +2,9 @@ if (window.myScriptHasRun) {
   console.log("has run!");
 } else {
 
-  console.log("start load the widget ...");
+  console.log("start process the echarts chart ...");
 
-  $axure.utils.loadJS('https://cdn.jsdelivr.net/gh/zhangjr-gaoyou/zrp@v0.1/test1.js');
+  $axure.utils.loadJS('https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js');
 
   console.log("start load the widget ...end.");
   setTimeout(function () {
@@ -13,6 +13,7 @@ if (window.myScriptHasRun) {
 
     for (var i = 0; i < allElements.length; i++) {
       console.log(allElements[i]);
+      console.log(allElements[i].getAttribute("data-label"));
       allElements[i].textContent = allElements[i].textContent + ' done';
     }
 
