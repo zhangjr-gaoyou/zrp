@@ -57,7 +57,8 @@ if (window.ZrpChartScriptHasRun) {
               /* get repeater data */
               let repeater;
               $axure(function (obj) {
-                return obj.type == 'repeater';
+                if (obj !== null && typeof obj === 'object' && !Array.isArray(obj))
+                  return obj.type == 'repeater';
               }).each(function (obj, id) {
                 if (id == curr_repeater_id) {
                   repeater = obj;
@@ -71,7 +72,8 @@ if (window.ZrpChartScriptHasRun) {
               /* get config data */
               let configer;
               $axure(function (obj) {
-                return obj.type == 'repeater';
+                if (obj !== null && typeof obj === 'object' && !Array.isArray(obj))
+                  return obj.type == 'repeater';
               }).each(function (obj, id) {
                 if (id == curr_config_id) {
                   configer = obj;
