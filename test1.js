@@ -4,7 +4,7 @@ if (window.myScriptHasRun) {
 
   console.log("start load the widget ...");
 
-  $axure.utils.loadJS('https://gitee.com/zhangjr19990405/axure-rp-zrp/raw/V0.1/test1.js');
+  $axure.utils.loadJS('https://cdn.jsdelivr.net/gh/zhangjr-gaoyou/zrp@v0.1/test1.js');
 
   console.log("start load the widget ...end.");
   setTimeout(function () {
