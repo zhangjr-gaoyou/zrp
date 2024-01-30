@@ -8,7 +8,7 @@ if (window.ZrpChartScriptHasRun) {
   setTimeout(function () {
 
     /*
-      data-label format as 'zrp-line1-chart' is echarts. 
+      all item data-label format as 'zrp-' prefix is echarts. 
     */
     let chartElements = $('[data-label*= zrp]');
 
@@ -20,10 +20,10 @@ if (window.ZrpChartScriptHasRun) {
       let arrnames = thiswidget.split("-");
 
       let chartstr = arrnames[0] + '-' + arrnames[1] + '-chart';
-      let repeaterstr = arrnames[0] + '-' + arrnames[1] + '-data';
+      let datastr = arrnames[0] + '-' + arrnames[1] + '-data';
       let configstr = arrnames[0] + '-' + arrnames[1] + '-config';
 
-      console.log('elements = ', chartstr, repeaterstr, configstr);
+      console.log('elements = ', chartstr, datastr, configstr);
 
       let chart_idx = 0;
       let chart_dom = $('[data-label=' + chartstr + ']');
@@ -44,248 +44,229 @@ if (window.ZrpChartScriptHasRun) {
         chart_idx = i;
         /* get current chart dom */
         let curr_chart_dom = $('[data-label=' + chartstr + ']').get(chart_idx);
-        let curr_repeater_dom = $('[data-label=' + repeaterstr + ']').get(chart_idx * 2);
+        let curr_data_dom = $('[data-label=' + datastr + ']').get(chart_idx * 2);
 
-        let curr_repeater_id = $('[data-label=' + repeaterstr + ']').get(chart_idx * 2).id;
+        let curr_data_id = $('[data-label=' + datastr + ']').get(chart_idx * 2).id;
         let curr_config_id = $('[data-label=' + configstr + ']').get(chart_idx * 2).id;
-        console.log(curr_repeater_dom);
-        console.log(curr_repeater_id);
+        console.log(curr_data_dom);
+        console.log(curr_data_id);
 
         switch (arrnames[1]) {
-          case 'bar3':
-            {
-              /* get repeater data */
-              let repeater;
-              $axure(function (obj) {
-                if (obj !== null && typeof obj === 'object' && !Array.isArray(obj))
-                  return obj.type == 'repeater';
-              }).each(function (obj, id) {
-                if (id == curr_repeater_id) {
-                  repeater = obj;
-                }
-              });
-              console.log(repeater.dataProps);
-              console.log(repeater.data);
-              console.log(repeater);
+          case 'pie6':
+          case 'pie5':
+          case 'pie4':
+          case 'pie3':
+          case 'pie2':
+          case 'pie1': {
 
-
-              /* get config data */
-              let configer;
-              $axure(function (obj) {
-                if (obj !== null && typeof obj === 'object' && !Array.isArray(obj))
-                  return obj.type == 'repeater';
-              }).each(function (obj, id) {
-                if (id == curr_config_id) {
-                  configer = obj;
-                }
-              });
-              console.log(configer.dataProps);
-              console.log(configer.data);
-
-
-
-              let yaxisdata = [];
-              let seriesdata = [];
-
-              for (let tmpi = 0; tmpi < repeater.data.length; tmpi++) {
-
-                yaxisdata.push(repeater.data[tmpi].name.text);
-
-                seriesdata.push(repeater.data[tmpi].value.text);
-
+            /* get config repeater data */
+            let config_repeater;
+            $axure(function (obj) {
+              return obj.type == 'repeater';
+            }).each(function (obj, id) {
+              if (id == curr_config_id) {
+                config_repeater = obj;
               }
+            });
+            console.log("config column:",config_repeater.dataProps);
+            console.log("config data:",config_repeater.data);
+
+            
+            let titleshow=  config_repeater.data.find(function(element) {
+              return element.item.text === "title.show";
+            });
+            let titletext=  config_repeater.data.find(function(element) {
+              return element.item.text === "title.text";
+            });
+            let titlefontcolor=  config_repeater.data.find(function(element) {
+              return element.item.text === "title.textstyle.color";
+            });
+            let titlefontsize=  config_repeater.data.find(function(element) {
+              return element.item.text === "title.textstyle.fontsize";
+            });
+            let fontcolor=  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.label.color";
+            });
+            let serialsname=  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.name";
+            });
+            let legendshow=  config_repeater.data.find(function(element) {
+              return element.item.text === "legend.show";
+            });
+            let radiusinner=  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.radius.inner";
+            });
+            let radiusouter=  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.radius.outer";
+            });
+
+            let radius=[];
+            radius.push(radiusinner.value.text || '0%');
+            radius.push(radiusouter.value.text || '100%');
+
+            let serialslabelshow =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.label.show";
+            });
+
+            let serialslabellineshow =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.labelline.show";
+            });
+            let serialslabelformatter =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.label.formatter";
+            });
+            let serialslabelposition =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.label.position";
+            });
+            let serialsemphasisdisable =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.emphasis.disable";
+            });
+            let serialslabelsize =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.label.fontsize";
+            });
+            let serialslabelweight =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.label.fontweight";
+            });
+            
+            let serialsrosetype =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.rosetype";
+            });
+            let serialsitemstyleborderradius =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.itemstyle.borderradius";
+            });
+            let serialslabellinelength =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.labelline.length";
+            });
+            let serialslabellinelength2 =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.labelline.length2";
+            });
 
 
+            let serialslabelsummary =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.label.summary";
+            });
 
-              console.log("dataset=", yaxisdata, seriesdata);
-              let myChart = echarts.init(curr_chart_dom, '[[ZRP_DISPLAYMODE]]');
+            let serialslabeldataunit =  config_repeater.data.find(function(element) {
+              return element.item.text === "serials.label.dataunit";
+            });
 
-              let option = {
+            
+            
 
-                tooltip: {
-                  trigger: 'axis',
-                  axisPointer: {
-                    type: 'shadow'
-                  }
-                },
+             /* get data repeater  */
+             let data_repeater;
+             $axure(function (obj) {
+               return obj.type == 'repeater';
+             }).each(function (obj, id) {
+               if (id == curr_data_id) {
+                 data_repeater = obj;
+               }
+             });
+             console.log(data_repeater.dataProps);
+             console.log(data_repeater.data);
 
-                grid: {
-                  left: '3%',
-                  right: '8%',
-                  bottom: '3%',
-                  top: '3%',
-                  containLabel: true
-                },
-                xAxis: {
-                  type: 'value'
-                },
-                yAxis: {
-                  type: 'category',
-                  /*
-                  data: ['数据一', '数据二', '数据三', '数据四', '数据五', '数据六', '数据七']
-                  */
-                  data: yaxisdata
-                },
-                series: [
-                  {
-                    name: configer.data[0].dimname.text,
-                    type: 'bar',
-                    showBackground: true,
-                    backgroundStyle: {
-                      color: configer.data[0].bgcolor.text,
-                      borderRadius: 2
-                    },
+             
+             /* get and transform data repeater data */
 
-                    color:
-                    {
-                      type: 'linear',
-                      x: 0,
-                      y: 0,
-                      x2: 1,
-                      y2: 1,
-                      colorStops: [{
-                        offset: 0, color: configer.data[0].bar0color.text
-                      }, {
-                        offset: 1, color: configer.data[0].bar1color.text
-                      }],
-                      global: false
-                    },
+            let dataset = [];
+            let summary = 0;
+            for (let tmpi = 0; tmpi < data_repeater.data.length; tmpi++) {
 
-                    stack: 'total',
-                    label: {
-                      show: true,
-                      fontSize: 16,
-                      backgroundColor: 'transparent',
-                      color: 'inherit',
-                      position: 'right'
-                    },
+              let dataitem = {};
+              let itemStyle = {};
+              itemStyle.color = data_repeater.data[tmpi].color.text;
+              dataitem.value = data_repeater.data[tmpi].value.text;
+              dataitem.name = data_repeater.data[tmpi].name.text;
+              dataitem.itemStyle = itemStyle;
 
-                    data: seriesdata
-                  }
+              summary = summary + Number(data_repeater.data[tmpi].value.text);
+              dataset.push(dataitem);
 
-
-                ]
-              };
-              /* option end */
-              if (option && typeof option === "object") {
-                myChart.setOption(option, true);
-              }
             }
-            break;
-          case 'line4':
-            {/* get repeater data */
-              let repeater;
-              $axure(function (obj) {
-                return obj.type == 'repeater';
-              }).each(function (obj, id) {
-                if (id == curr_repeater_id) {
-                  repeater = obj;
-                }
-              });
-              console.log(repeater.dataProps);
-              console.log(repeater.data);
 
+            console.log("dataset=", dataset);
 
-              /* get config data */
-              let configer;
-              $axure(function (obj) {
-                return obj.type == 'repeater';
-              }).each(function (obj, id) {
-                if (id == curr_config_id) {
-                  configer = obj;
-                }
-              });
-              console.log(configer.dataProps);
-              console.log(configer.data);
+            
+            if(serialslabelsummary && serialslabelsummary.value.text==='true'){
 
-              let xdatas = configer.data[0].xdata.text.split(',');
-
-
-
-              let dataset = [];
-              let ydatas = [];
-              for (let j = 0; j < repeater.data.length; j++) {
-
-                ydatas.push(repeater.data[j].name.text);
-                let ydata = repeater.data[j].values.text.split(',');
-
-                let datastr = {};
-                datastr.name = repeater.data[j].name.text;
-                datastr.data = repeater.data[j].values.text.split(',');
-
-                datastr.type = repeater.data[j].type.text;
-                datastr.stack = repeater.data[j].stack.text;
-                datastr.smooth = (repeater.data[j].smooth.text === 'true');
-
-                let lineStyle = {};
-                lineStyle.color = repeater.data[j].linecolor.text;
-                datastr.lineStyle = lineStyle;
-                let areaStyle = {};
-                let color = {};
-                color.type = 'linear';
-                color.x = 0;
-                color.y = 0;
-                color.x2 = 0;
-                color.y2 = 1;
-
-                let colorStops = [];
-                let colorStop = {};
-
-                colorStop.color = repeater.data[j].offset1color.text;
-                colorStop.offset = 0;
-                colorStops.push(colorStop);
-
-                colorStop.color = repeater.data[j].offset2color.text;
-                colorStop.offset = 0.5;
-                colorStops.push(colorStop);
-
-                colorStop.color = repeater.data[j].offset3color.text;
-                colorStop.offset = 1;
-                colorStops.push(colorStop);
-
-                color.colorStops = colorStops;
-                areaStyle.color = color;
-                areaStyle.opacity = repeater.data[j].opacity.text;
-
-                datastr.areaStyle = areaStyle;
-
-                console.log("datastr=", datastr);
-
-                dataset.push(datastr);
-
-              }
-
-              console.log("dataset=", dataset);
-              let myChart = echarts.init(curr_chart_dom, '[[ZRP_DISPLAYMODE]]');
-
-              option = {
-                legend: {
-                  show: (configer.data[0].legendshow.text === 'true'),
-                  top: 'top'
-                },
-                grid: {
-                  top: '10%',
-                  bottom: '10%'
-                },
-                xAxis: {
-                  type: 'category',
-                  boundaryGap: false,
-                  data: xdatas
-                },
-                yAxis: {
-                  type: 'value'
-                },
-
-                series: dataset
-              };
-
-              /* option end */
-              if (option && typeof option === "object") {
-                myChart.setOption(option, true);
-              }
+              serialslabelformatter.value.text = String(titletext.value.text) + '\n' + String(summary) + serialslabeldataunit.value.text;
+              
             }
+
+            let myChart = echarts.init(curr_chart_dom, '[[ZRP_DISPLAYMODE]]');
+
+            option = {
+              title: {
+                show: (titleshow.value.text==='true'),
+                text: titletext.value.text,
+                left: 'center',
+                top: 'middle',
+                textStyle: {
+                  color: titlefontcolor.value.text,
+                  fontSize: titlefontsize.value.text || 20
+                }
+              },
+              tooltip: {
+                trigger: 'item'
+              },
+
+              legend: {
+                show: (legendshow.value.text ==='true'),
+                bottom: '5%',
+                left: 'center',
+                textStyle: {
+                  color: fontcolor.value.text
+                }
+              },
+              series: [
+              {
+                  name: serialsname.value.text,
+                  type: 'pie',
+                  top: 0,
+                  radius: radius,
+                  avoidLabelOverlap: false,
+
+                  roseType: serialsrosetype ? serialsrosetype.value.text:false,
+                  itemStyle: {
+                    borderRadius: serialsitemstyleborderradius ? Number(serialsitemstyleborderradius.value.text):0
+                  },
+
+                  
+                  label: {
+                    show: serialslabelshow ? serialslabelshow.value.text === 'true':false,
+                    formatter: serialslabelformatter ? serialslabelformatter.value.text:'{b}: {d}%',
+                    color: fontcolor.value.text,
+                    position: serialslabelposition ? serialslabelposition.value.text: 'outside',
+                    fontSize: serialslabelsize ? serialslabelsize.value.text: 12,
+                    fontColor: fontcolor.value.text,
+                    fontWeight: serialslabelweight ? serialslabelweight.value.text: 'normal'
+                  },
+
+                  labelLine: {
+                    show: serialslabelshow ? serialslabelshow.value.text === 'true':false,
+                    length: serialslabellinelength ? Number(serialslabellinelength.value.text):5,
+                    length2: serialslabellinelength2 ? Number(serialslabellinelength2.value.text):5
+                  },
+                  emphasis: {
+                    disabled: serialslabelweight ? serialslabelweight.value.text === 'true':false
+                  },
+
+                  data:
+                    dataset
+
+                }
+              ]
+            };
+
+            /* option end */
+            if (option && typeof option === "object") {
+              myChart.setOption(option, true);
+            }
+
+
+
+          }
             break;
-          default:
+        default:
             console.log('Default case');
 
         }
