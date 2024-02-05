@@ -1051,8 +1051,12 @@ if (window.ZrpChartScriptHasRun) {
               datastr.showBackground = seriesshowBackground ? (seriesshowBackground.value.text === 'true') : false;
               let itemBkStyle = {};
 
-              itemBkStyle.color = seriesbackgroundStylecolor.value.text;
-              datastr.backgroundStyle = itemBkStyle;
+              if (typeof seriesbackgroundStylecolor !== 'undefined' && seriesbackgroundStylecolor !== null) {
+                itemBkStyle.color = seriesbackgroundStylecolor.value.text;
+                datastr.backgroundStyle = itemBkStyle;
+              }
+
+
 
               let serieslabelshow = config_repeater.data.find(function (element) {
                 return element.item.text === "series.label.show";
@@ -1061,7 +1065,7 @@ if (window.ZrpChartScriptHasRun) {
               if (typeof serieslabelshow !== 'undefined' && serieslabelshow !== null
                 && serieslabelshow.value.text === 'true') {
 
-                console.log("serieslabelshow=",serieslabelshow);
+                console.log("serieslabelshow=", serieslabelshow);
                 let label = {};
 
                 label.show = true;
